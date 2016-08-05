@@ -12,10 +12,62 @@ import java.util.ArrayList;
 
 public class TXTregex {
 	public static void main(String args[]) throws Exception{
-		//DealWeiChangBinYanFang();
-		//DealNongCunZhongYiDanYanFang500();
-		//DealFangZhiChangJianBinDanFangYanFangJingXuan();
-		DealHaiYangYaoWuYuXiaoFang();
+//		DealHaiYangYaoWuYuXiaoFang();
+//		DealZhongYaoBiaoZhunMingSuCha();
+		DealZhongYaoDaCiDian();
+	}
+	public static void DealZhongYaoDaCiDian() throws Exception{
+		//输入处理的正则表达式
+		String inputString="<标准名>//<来源>##<别名>别名<商品名>商品名<处方名>处方名<性味归经>性味归经<功效主治>功效主治<用量>用量";
+		//txt所在文件夹
+		String fileFolder="E:\\processData\\全文识别\\中药别名大辞典\\txt\\";
+		//指定输出文件
+		String outputFileName="E:\\processData\\Output\\中药别名大辞典.csv";
+		//txt起始页码和结束页码
+		int startPageNum=31;
+		int endPageNum=659;
+		//分隔符位置
+		String pos="before";
+		
+		ArrayList<String[]> list=dealRegex(inputString);
+		File outputFile=new File(outputFileName);
+		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
+		//BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"));
+		csvHeaderWriteIn(writer,list);
+		if(pos.equals("after")){
+			dealWithLabelAfter(writer,list,startPageNum,endPageNum,fileFolder);
+		}
+		else{
+			dealWithLabelBefore(writer,list,startPageNum,endPageNum,fileFolder);
+		}
+		writer.close();
+	}
+	public static void DealZhongYaoBiaoZhunMingSuCha() throws Exception{
+		//输入处理的正则表达式
+		String inputString="<标准名>//<别名>别名";
+		//txt所在文件夹
+		//String fileFolder="E:\\source\\李哲蓉\\12本成品数据\\20150001\\txt\\";
+		String fileFolder="E:\\processData\\全文识别\\中药标准名与别名速查\\txt\\";
+		//指定输出文件
+		String outputFileName="E:\\processData\\Output\\中药标准名与别名速查.csv";
+		//txt起始页码和结束页码
+		int startPageNum=18;
+		int endPageNum=145;
+		//分隔符位置
+		String pos="before";
+		
+		ArrayList<String[]> list=dealRegex(inputString);
+		File outputFile=new File(outputFileName);
+		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
+		//BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"));
+		csvHeaderWriteIn(writer,list);
+		if(pos.equals("after")){
+			dealWithLabelAfter(writer,list,startPageNum,endPageNum,fileFolder);
+		}
+		else{
+			dealWithLabelBefore(writer,list,startPageNum,endPageNum,fileFolder);
+		}
+		writer.close();
 	}
 	public static void DealHaiYangYaoWuYuXiaoFang() throws Exception{
 		//输入处理的正则表达式
@@ -44,142 +96,7 @@ public class TXTregex {
 		}
 		writer.close();
 	}
-	public static void DealFangZhiChangJianBinDanFangYanFangJingXuan() throws Exception{
-		//输入处理的正则表达式
-		String inputString="<1>【组成】<2>【用法】";
-		//txt所在文件夹
-		//String fileFolder="E:\\source\\李哲蓉\\12本成品数据\\20150001\\txt\\";
-		String fileFolder="E:\\data\\李哲蓉\\第一批\\1防治常见病单方验方精选\\TXT\\";
-		//指定输出文件
-		String outputFileName="E:\\worktest\\outputForTest.csv";
-		//txt起始页码和结束页码
-		int startPageNum=9;
-		int endPageNum=320;
-		//分隔符位置
-		String pos="before";
-		
-		ArrayList<String[]> list=dealRegex(inputString);
-		File outputFile=new File(outputFileName);
-		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
-		//BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"));
-		csvHeaderWriteIn(writer,list);
-		if(pos.equals("after")){
-			dealWithLabelAfter(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		else{
-			dealWithLabelBefore(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		writer.close();
-	}
-	public static void DealChangJianBinDanFangYanFang() throws Exception{
-		//输入处理的正则表达式
-		String inputString="<1>【方<2>【用法】";
-		//txt所在文件夹
-		//String fileFolder="E:\\source\\李哲蓉\\12本成品数据\\20150001\\txt\\";
-		String fileFolder="E:\\data\\李哲蓉\\第一批\\1常见病单方·验方\\TXT\\";
-		//指定输出文件
-		String outputFileName="E:\\worktest\\outputForTest.csv";
-		//txt起始页码和结束页码
-		int startPageNum=6;
-		int endPageNum=210;
-		//分隔符位置
-		String pos="before";
-		
-		ArrayList<String[]> list=dealRegex(inputString);
-		File outputFile=new File(outputFileName);
-		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
-		//BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"));
-		csvHeaderWriteIn(writer,list);
-		if(pos.equals("after")){
-			dealWithLabelAfter(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		else{
-			dealWithLabelBefore(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		writer.close();
-	}
-	public static void DealNongCunZhongYiDanYanFang500() throws Exception{
-		//输入处理的正则表达式
-		String inputString="<1>方<2>主治：<3>功效：<4>用法：";
-		//txt所在文件夹
-		//String fileFolder="E:\\source\\李哲蓉\\12本成品数据\\20150001\\txt\\";
-		String fileFolder="E:\\data\\李哲蓉\\第一批\\1农村中医单验方500首\\TXT\\";
-		//指定输出文件
-		String outputFileName="E:\\worktest\\outputForTest.csv";
-		//txt起始页码和结束页码
-		int startPageNum=10;
-		int endPageNum=235;
-		//分隔符位置
-		String pos="before";
-		
-		ArrayList<String[]> list=dealRegex(inputString);
-		File outputFile=new File(outputFileName);
-		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
-		//BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"));
-		csvHeaderWriteIn(writer,list);
-		if(pos.equals("after")){
-			dealWithLabelAfter(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		else{
-			dealWithLabelBefore(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		writer.close();
-	}
-	public static void DealZhongCaoYaoDanFangYanFangXuanBian() throws Exception{
-		//输入处理的正则表达式
-		String inputString="<0>处方<1>用法";
-		//txt所在文件夹
-		//String fileFolder="E:\\source\\李哲蓉\\12本成品数据\\20150001\\txt\\";
-		String fileFolder="E:\\data\\李哲蓉\\第一批\\1中草药单方验方选编\\TXT\\";
-		//指定输出文件
-		String outputFileName="E:\\worktest\\outputForTest.csv";
-		//txt起始页码和结束页码
-		int startPageNum=11;
-		int endPageNum=149;
-		//分隔符位置
-		String pos="before";
-		
-		ArrayList<String[]> list=dealRegex(inputString);
-		File outputFile=new File(outputFileName);
-		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
-		//BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"));
-		csvHeaderWriteIn(writer,list);
-		if(pos.equals("after")){
-			dealWithLabelAfter(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		else{
-			dealWithLabelBefore(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		writer.close();
-	}
-	public static void DealWeiChangBinYanFang() throws Exception{
-		//输入处理的正则表达式
-		String inputString="<0>//<1>【药物组成】<2>【适用病症】<3>【用药方法】<4>【临床疗效】<5>【验方来源】";
-		//txt所在文件夹
-		//String fileFolder="E:\\source\\李哲蓉\\12本成品数据\\20150001\\txt\\";
-		String fileFolder="E:\\data\\李哲蓉\\第一批\\1胃肠病验方\\TXT\\";
-		//指定输出文件
-		String outputFileName="E:\\worktest\\outputForTest.csv";
-		//txt起始页码和结束页码
-		int startPageNum=18;
-		int endPageNum=384;
-		//分隔符位置
-		String pos="before";
-		
-		ArrayList<String[]> list=dealRegex(inputString);
-		File outputFile=new File(outputFileName);
-		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
-		//BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "utf-8"));
-		csvHeaderWriteIn(writer,list);
-		if(pos.equals("after")){
-			dealWithLabelAfter(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		else{
-			dealWithLabelBefore(writer,list,startPageNum,endPageNum,fileFolder);
-		}
-		writer.close();
-	}
-	
+
 	public static void dealWithLabelAfter(BufferedWriter writer, ArrayList<String[]> list,int startPageNum,int endPageNum,String fileFolder) throws IOException{
 		BufferedReader reader;
 		File inputFile;
@@ -331,6 +248,11 @@ public class TXTregex {
 					//tempString=tempString.substring(1,tempString.length());
 					start=false;
 				}
+				tempString = tempString.replace("/", "/").replace("：", "：").replace("/", "/");
+				//主要为处理附药后面的分隔符与标准名后分隔符相同的问题
+				if(tempString.contains("附：") && !tempString.contains("（")){
+					tempString = tempString.replace("#", "/");
+				}
 				blankLine=false;
 				if(tempString.trim().equals(""))
 					blankLine=true;
@@ -353,29 +275,31 @@ public class TXTregex {
 //					}
 //				}
 				//解决寻找最后一项没有加label问题，通过空行判断
-				if(indexForList==0 &&(blankLine)){
-					if(!recordString.equals("")){
-						clause[listLength-1]=recordString;
-						csvContentWriteIn(writer,clause);
-						recordString="";
-						indexForList += 1;
-						clause=new String[listLength];
-						continue;
-					}
-					waitingForLine=true;
-				}
-				else
-					waitingForLine=false;
+//				if(indexForList==0 &&(blankLine)){
+//					if(!recordString.equals("")){
+//						clause[listLength-1]=recordString;
+//						csvContentWriteIn(writer,clause);
+//						recordString="";
+//						indexForList += 1;
+//						clause=new String[listLength];
+//						continue;
+//					}
+//					waitingForLine=true;
+//				}
+//				else
+//					waitingForLine=false;
 				//判断当前行是否有匹配label
+				while(true){
 				if(tempString.indexOf(list.get(indexForList)[1])==-1){
-					tempString=tempString.trim();
-					recordString=recordString+tempString;
+					tempString = tempString.trim();
+					recordString = recordString + tempString;
+					break;
 				}
 				else{
-					if(!recordString.equals("")){
+//					if(!recordString.equals("")){
 						//判断当前匹配label是否为第一个，即最后一项，若是，则写入文件
-						if(indexForList==0){
-							if(clause[0]!=""){
+						if(indexForList == 0){
+//							if(clause[0]!=""){
 								recordString=recordString+tempString.substring(0,tempString.indexOf(list.get(indexForList)[1]));
 								clause[listLength-1]=recordString;
 								System.out.println(clause[0]);
@@ -383,29 +307,33 @@ public class TXTregex {
 								clause=new String[listLength];							
 								tempString=tempString.trim();
 								recordString=tempString.substring(tempString.indexOf(list.get(indexForList)[1])+list.get(indexForList)[1].length(), tempString.length());		
-							}
+//							}
 						}
 						else{
-							clause[indexForList-1]=recordString;
 							tempString=tempString.trim();
-							recordString=tempString.substring(list.get(indexForList)[1].length()+2, tempString.length()).trim();		
+							recordString += tempString.substring(0, tempString.indexOf(list.get(indexForList)[1]));
+							clause[indexForList-1]=recordString;
+							recordString=tempString.substring(list.get(indexForList)[1].length(), tempString.length()).trim();		
 						}
 						//循环label的index
 						if(indexForList==listLength-1){
 							indexForList=0;
 						}
-						else
+						else{
 							indexForList=indexForList+1;
-					}
-					else{
-						tempString=tempString.trim();
-						recordString=tempString.substring(tempString.indexOf(list.get(indexForList)[1])+list.get(indexForList)[1].length(), tempString.length());
-						if(indexForList==listLength-1){
-							indexForList=0;
+							break;
 						}
-						else
-							indexForList=indexForList+1;
-					}
+//					}
+//					else{
+//						tempString=tempString.trim();
+//						recordString=tempString.substring(tempString.indexOf(list.get(indexForList)[1])+list.get(indexForList)[1].length(), tempString.length());
+//						if(indexForList==listLength-1){
+//							indexForList=0;
+//						}
+//						else
+//							indexForList=indexForList+1;
+//					}
+				}
 				}
 			}
 			reader.close();
@@ -497,7 +425,7 @@ public class TXTregex {
 	public static void csvContentWriteIn(BufferedWriter writer,String[] clause) throws IOException{
 		String content="";
 		for(int i=0;i<clause.length;i++){
-			content=content+clause[i]+",";
+			content=content+clause[i].replace(",", "，")+",";
 		}
 		content=content.substring(0, content.length()-1)+"\r\n";
 		writer.write(content);
