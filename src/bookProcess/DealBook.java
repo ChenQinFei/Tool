@@ -20,9 +20,11 @@ public class DealBook{
 	private static Database db;
 	public static void main(String args[]) throws IOException, Exception{
 //		SecondProcessChangYongZhongYao();
-		//		SecondProcessZhaoSuCha();
+//				SecondProcessZhaoSuCha();
 //		SecondProcessDaCiDian();
-		uploadData();
+//		uploadData();
+//		processBaike();
+		processQian();
 	}
 	public static void SecondProcessDaCiDian() throws IOException{
 		String inputFilePath="E:\\processData\\Output\\中药别名大辞典.csv";
@@ -101,7 +103,7 @@ public class DealBook{
 		File inputFile=new File(inputFilePath);
 		BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(inputFile),"GBK"));
 		//指定输出文件
-		String outputFileName="E:\\processData\\Output\\secondPro\\中药标准名与别名速查re.csv";
+		String outputFileName="E:\\processData\\Output\\secondPro\\中药标准名与别名速查re2.csv";
 		File outputFile=new File(outputFileName);
 		BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "GBK"));
 		String tempString;
@@ -124,7 +126,7 @@ public class DealBook{
 				}
 				String source = name.substring(name.indexOf("(")+1, name.indexOf(")"));
 				name = name.substring(0, name.indexOf("("));
-				String bieming = part[1].trim();
+				String bieming = part[1].replace("/","").trim();
 				writer.write(name + "," + bihua + "," + source + "," + bieming + "\r\n");
 			}
 		} catch (IOException e) {
@@ -201,7 +203,7 @@ public class DealBook{
 		String connectionURL = "jdbc:mysql://10.15.62.29:3306/bieming?user=root&password=123&useUnicode=true&characterEncoding=UTF8";
 		Connection conn = null;
 		Statement stmt = null;
-		String inputFile="E:\\processData\\Output\\secondPro\\中药标准名与别名速查re.csv";
+		String inputFile="E:\\processData\\Output\\secondPro\\中药标准名与别名速查re2.csv";
 		BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(inputFile),"GBK"));
 		int id = 0;
 		try {
@@ -241,5 +243,89 @@ public class DealBook{
 			reader.close();
 		}
 	}
+	//处理百科中别名数据
+	public static void processBaike() throws IOException, SQLException{
+		String connectionURL = "jdbc:mysql://10.15.62.29:3306/bieming?user=root&password=123&useUnicode=true&characterEncoding=UTF8";
+		Connection conn = null;
+		Statement stmt = null;
+		String inputFile="E:\\processData\\baike.csv";
+		BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(inputFile),"GBK"));
+		int id = 0;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(connectionURL);
+			System.out.println("connect success");
+			stmt = conn.createStatement();
+			String line;
+//			int i = 0;
+			while((line=reader.readLine()) != null){
+//				if(i == 0){
+//					i = 1;
+//					continue;
+//				}
+				String[] part = line.replace("\"","").split(",");
+				if(part.length < 3 || !part[1].contains("别名")|| part[1].length() > 254){
+					continue;
+				}
+				System.out.println(line);
+				String sql = "insert ignore into baike(id,name,bieming,caijiyuan) values ("
+								+id+",'"+part[0]+"','"+part[2]+"','百度百科')";
+				System.out.println(sql);
+				stmt.executeUpdate(sql);
+				id++;
+				}
+			} catch(Exception e){
+				System.out.println("connection error");
+				e.printStackTrace();
+			} finally{
+				if(conn != null)
+					conn.close();
+				if(stmt != null)
+					stmt.close();
+				reader.close();
+			}
+		}
+
+	//处理钱医生提供别名数据
+	public static void processQian() throws IOException, SQLException{
+		String connectionURL = "jdbc:mysql://10.15.62.29:3306/bieming?user=root&password=123&useUnicode=true&characterEncoding=UTF8";
+		Connection conn = null;
+		Statement stmt = null;
+		String inputFile="E:\\processData\\qian.txt";
+		BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(inputFile),"GBK"));
+		int id = 0;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(connectionURL);
+			System.out.println("connect success");
+			stmt = conn.createStatement();
+			String line;
+//			int i = 0;
+			while((line=reader.readLine()) != null){
+//				if(i == 0){
+//					i = 1;
+//					continue;
+//				}
+				String part = line.replace("。","").replaceAll("（|<","、").replaceAll("）|>","、").replace("、、","、").trim();
+				int index = part.indexOf("、");
+		
+				String sql = "insert ignore into professor_qian(id,name,bieming,caijiyuan) values ("
+								+id+",'"+part.substring(0, index)+"','"+part.substring(index+1)+"','专家-钱俊华')";
+				System.out.println(sql);
+				stmt.executeUpdate(sql);
+				id++;
+				}
+			} catch(Exception e){
+				System.out.println("connection error");
+				e.printStackTrace();
+			} finally{
+				if(conn != null)
+					conn.close();
+				if(stmt != null)
+					stmt.close();
+				reader.close();
+			}
+		}
+
 }
 

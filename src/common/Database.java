@@ -36,7 +36,7 @@ public class Database {
 	public ResultSet SQLQuery(String sql) throws SQLException {
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(sql);
-		stmt.close();
+//		stmt.close();
 		return rs;
 	}
 
